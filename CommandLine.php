@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 /**
  * CommandLine class
  *
@@ -60,43 +61,36 @@ class CommandLine
      *                      #78651 function getArgs($args) by B Crawford, 22-Oct-2007
      * @usage               $args = CommandLine::parseArgs($_SERVER['argv']);
      */
-    public static function parseArgs($argv = null)
+    public static function parseArgs(?array $argv = null): array
     {
-        $argv                           = $argv ? $argv : $_SERVER['argv'];
+        $argv                           = $argv ?? $_SERVER['argv'];
 
         array_shift($argv);
         $out                            = array();
 
-        for ($i = 0, $j = count($argv); $i < $j; $i++)
-        {
+        for ($i = 0, $j = count($argv); $i < $j; $i++) {
             $arg                        = $argv[$i];
 
             // --foo --bar=baz
-            if (substr($arg, 0, 2) === '--')
-            {
+            if (substr($arg, 0, 2) === '--') {
                 $eqPos                  = strpos($arg, '=');
 
                 // --foo
-                if ($eqPos === false)
-                {
+                if ($eqPos === false) {
                     $key                = substr($arg, 2);
 
                     // --foo value
-                    if ($i + 1 < $j && $argv[$i + 1][0] !== '-')
-                    {
+                    if ($i + 1 < $j && $argv[$i + 1][0] !== '-') {
                         $value          = $argv[$i + 1];
                         $i++;
-                    }
-                    else
-                    {
+                    } else {
                         $value          = isset($out[$key]) ? $out[$key] : true;
                     }
                     $out[$key]          = $value;
                 }
 
                 // --bar=baz
-                else
-                {
+                else {
                     $key                = substr($arg, 2, $eqPos - 2);
                     $value              = substr($arg, $eqPos + 1);
                     $out[$key]          = $value;
@@ -104,28 +98,23 @@ class CommandLine
             }
 
             // -k=value -abc
-            else if (substr($arg, 0, 1) === '-')
-            {
+            else if (substr($arg, 0, 1) === '-') {
                 // -k=value
-                if (substr($arg, 2, 1) === '=')
-                {
+                if (substr($arg, 2, 1) === '=') {
                     $key                = substr($arg, 1, 1);
                     $value              = substr($arg, 3);
                     $out[$key]          = $value;
                 }
                 // -abc
-                else
-                {
+                else {
                     $chars              = str_split(substr($arg, 1));
-                    foreach ($chars as $char)
-                    {
+                    foreach ($chars as $char) {
                         $key            = $char;
                         $value          = isset($out[$key]) ? $out[$key] : true;
                         $out[$key]      = $value;
                     }
                     // -a value1 -abc value2
-                    if ($i + 1 < $j && $argv[$i + 1][0] !== '-')
-                    {
+                    if ($i + 1 < $j && $argv[$i + 1][0] !== '-') {
                         $out[$key]      = $argv[$i + 1];
                         $i++;
                     }
@@ -133,8 +122,7 @@ class CommandLine
             }
 
             // plain-arg
-            else
-            {
+            else {
                 $value                  = $arg;
                 $out[]                  = $value;
             }
@@ -150,24 +138,20 @@ class CommandLine
      */
     public static function getBoolean($key, $default = false)
     {
-        if (!isset(self::$args[$key]))
-        {
+        if (!isset(self::$args[$key])) {
             return $default;
         }
         $value                          = self::$args[$key];
 
-        if (is_bool($value))
-        {
+        if (is_bool($value)) {
             return $value;
         }
 
-        if (is_int($value))
-        {
+        if (is_int($value)) {
             return (bool)$value;
         }
 
-        if (is_string($value))
-        {
+        if (is_string($value)) {
             $value                      = strtolower($value);
             $map = array(
                 'y'                     => true,
@@ -181,8 +165,7 @@ class CommandLine
                 'on'                    => true,
                 'off'                   => false,
             );
-            if (isset($map[$value]))
-            {
+            if (isset($map[$value])) {
                 return $map[$value];
             }
         }
