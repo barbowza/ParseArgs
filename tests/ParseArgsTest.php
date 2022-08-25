@@ -7,7 +7,7 @@ require __DIR__ . '/../vendor/autoload.php';
 /**
  * @author Jan Břečka
  */
-class CommandLineTest extends TestCase
+class ParseArgsTest extends TestCase
 {
 
     const MOCK_SCRIPT_NAME = 'test.php';
@@ -15,21 +15,21 @@ class CommandLineTest extends TestCase
     /** @test */
     public function parseEmptyArray()
     {
-        $result = CommandLine::parseArgs(array());
+        $result = ParseArgs::parseArgs(array());
         $this->assertEquals(0, count($result));
     }
 
     /** @test */
     public function noArgument()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME));
         $this->assertEquals(0, count($result));
     }
 
     /** @test */
     public function singleArgument()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, 'a'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, 'a'));
         $this->assertEquals(1, count($result));
         $this->assertEquals('a', $result[0]);
     }
@@ -37,7 +37,7 @@ class CommandLineTest extends TestCase
     /** @test */
     public function multiArguments()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, 'a', 'b'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, 'a', 'b'));
         $this->assertEquals(2, count($result));
         $this->assertEquals('a', $result[0]);
         $this->assertEquals('b', $result[1]);
@@ -46,7 +46,7 @@ class CommandLineTest extends TestCase
     /** @test */
     public function singleSwitch()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, '-a'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, '-a'));
         $this->assertEquals(1, count($result));
         $this->assertTrue($result['a']);
     }
@@ -54,7 +54,7 @@ class CommandLineTest extends TestCase
     /** @test */
     public function singleSwitchWithValue()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, '-a=b'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, '-a=b'));
         $this->assertEquals(1, count($result));
         $this->assertEquals('b', $result['a']);
     }
@@ -62,7 +62,7 @@ class CommandLineTest extends TestCase
     /** @test */
     public function multiSwitch()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, '-a', '-b'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, '-a', '-b'));
         $this->assertEquals(2, count($result));
         $this->assertTrue($result['a']);
         $this->assertTrue($result['b']);
@@ -71,7 +71,7 @@ class CommandLineTest extends TestCase
     /** @test */
     public function multiSwitchAsOne()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, '-ab'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, '-ab'));
         $this->assertEquals(2, count($result));
         $this->assertTrue($result['a']);
         $this->assertTrue($result['b']);
@@ -80,7 +80,7 @@ class CommandLineTest extends TestCase
     /** @test */
     public function singleFlagWithoutValue()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, '--a'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, '--a'));
         $this->assertEquals(1, count($result));
         $this->assertTrue($result['a']);
     }
@@ -88,7 +88,7 @@ class CommandLineTest extends TestCase
     /** @test */
     public function singleFlagWithValue()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, '--a=b'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, '--a=b'));
         $this->assertEquals(1, count($result));
         $this->assertEquals('b', $result['a']);
     }
@@ -96,7 +96,7 @@ class CommandLineTest extends TestCase
     /** @test */
     public function singleFlagOverwriteValue()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, '--a=original', '--a=overwrite'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, '--a=original', '--a=overwrite'));
         $this->assertEquals(1, count($result));
         $this->assertEquals('overwrite', $result['a']);
     }
@@ -104,7 +104,7 @@ class CommandLineTest extends TestCase
     /** @test */
     public function singleFlagOverwriteWithoutValue()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, '--a=original', '--a'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, '--a=original', '--a'));
         $this->assertEquals(1, count($result));
         $this->assertEquals('original', $result['a']);
     }
@@ -112,7 +112,7 @@ class CommandLineTest extends TestCase
     /** @test */
     public function singleFlagWithDashInName()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, '--include-path=value'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, '--include-path=value'));
         $this->assertEquals(1, count($result));
         $this->assertEquals('value', $result['include-path']);
     }
@@ -120,7 +120,7 @@ class CommandLineTest extends TestCase
     /** @test */
     public function singleFlagWithDashInNameAndInValue()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, '--include-path=my-value'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, '--include-path=my-value'));
         $this->assertEquals(1, count($result));
         $this->assertEquals('my-value', $result['include-path']);
     }
@@ -128,7 +128,7 @@ class CommandLineTest extends TestCase
     /** @test */
     public function singleFlagWithEqualsSignInValue()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, '--funny=spam=eggs'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, '--funny=spam=eggs'));
         $this->assertEquals(1, count($result));
         $this->assertEquals('spam=eggs', $result['funny']);
     }
@@ -136,7 +136,7 @@ class CommandLineTest extends TestCase
     /** @test */
     public function singleFlagWithDashInNameAndEqualsSignInValue()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, '--also-funny=spam=eggs'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, '--also-funny=spam=eggs'));
         $this->assertEquals(1, count($result));
         $this->assertEquals('spam=eggs', $result['also-funny']);
     }
@@ -144,7 +144,7 @@ class CommandLineTest extends TestCase
     /** @test */
     public function singleFlagWithValueWithoutEquation ()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, '--a', 'b'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, '--a', 'b'));
         $this->assertEquals(1, count($result));
         $this->assertEquals('b', $result['a']);
     }
@@ -152,7 +152,7 @@ class CommandLineTest extends TestCase
     /** @test */
     public function multiSwitchAsOneWithValue()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, '-ab', 'value'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, '-ab', 'value'));
         $this->assertEquals(2, count($result));
         $this->assertTrue($result['a']);
         $this->assertEquals('value', $result['b']);
@@ -161,7 +161,7 @@ class CommandLineTest extends TestCase
     /** @test */
     public function combination()
     {
-        $result = CommandLine::parseArgs(array(self::MOCK_SCRIPT_NAME, '-ab', 'value', 'argument', '-c', '--s=r', '--x'));
+        $result = ParseArgs::parseArgs(array(self::MOCK_SCRIPT_NAME, '-ab', 'value', 'argument', '-c', '--s=r', '--x'));
         $this->assertEquals(6, count($result));
         $this->assertTrue($result['a']);
         $this->assertEquals('value', $result['b']);
@@ -175,7 +175,7 @@ class CommandLineTest extends TestCase
     public function parseGlobalServerVariable()
     {
         $_SERVER['argv'] = array(self::MOCK_SCRIPT_NAME, 'a');
-        $result = CommandLine::parseArgs();
+        $result = ParseArgs::parseArgs();
         $this->assertEquals(1, count($result));
     }
 }

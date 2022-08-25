@@ -1,15 +1,13 @@
 <?php declare(strict_types=1);
 
 /**
- * CommandLine class
- *
- * Command Line Interface (CLI) utility class.
+ * Command Line Arguments parsing utility class.
  *
  * @author              Patrick Fisher <patrick@pwfisher.com>
  * @since               August 21, 2009
  * @see                 https://github.com/pwfisher/CommandLine.php
  */
-class CommandLine
+class ParseArgs
 {
     public static $args;
 
