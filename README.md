@@ -1,7 +1,7 @@
 ParseArgs.php
 ===============
 
-PHP Command Line interface class. Provides friendly and flexible CLI argument parsing.
+PHP Command Line Arguments parsing utility class. Provides friendly and flexible CLI argument parsing.
 
 ### Usage
 
