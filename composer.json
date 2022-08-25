@@ -1,7 +1,7 @@
 {
 	"name": "barbowza/parse-args",
 	"type": "library",
-	"description": "PHP Command Line interface class. Provides friendly and flexible CLI argument parsing.",
+	"description": "PHP Command Line Arguments parsing utility class. Provides friendly and flexible CLI argument parsing.",
 	"keywords": ["cli", "parsing", "parser"],
 	"license": ["CC-BY-3.0"],
 	"authors": [

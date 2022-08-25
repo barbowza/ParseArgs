@@ -1,11 +1,11 @@
-CommandLine.php
+ParseArgs.php
 ===============
 
 PHP Command Line interface class. Provides friendly and flexible CLI argument parsing.
 
 ### Usage
 
-    $args = CommandLine::parseArgs($_SERVER['argv']);
+    $args = ParseArgs::parseArgs($_SERVER['argv']);
 
 This command line option parser supports any combination of three types of options
 [single character options (`-a -b` or `-ab` or `-c -d=dog` or `-cd dog`),
